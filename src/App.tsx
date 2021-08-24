@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import ReactDnd from "./DragAndDrop/DragAndDrop";
 
 function App() {
+  const [selection, setSelection] = useState("");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div
+      style={{
+        margin: "1rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
+      }}
+    >
+      <h1 style={{ cursor: "pointer" }} onClick={() => setSelection("")}>
+        Tutorials
+      </h1>
+      <ul style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
+        <li
+          style={{
+            cursor: "pointer",
+            color: selection === "react-dnd" ? "red" : "blue",
+          }}
+          onClick={() => setSelection("react-dnd")}
         >
-          Learn React
-        </a>
-      </header>
+          react-dnd
+        </li>
+      </ul>
+      {selection === "react-dnd" && <ReactDnd />}
     </div>
   );
 }
