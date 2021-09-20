@@ -45,13 +45,11 @@
   <h3 align="center">React Tutorials</h3>
 
   <p align="center">
-    React Tutorials
+<!--     <br />
+    <a href="https://github.com/jbaczuk/react-tutorials"><strong>Explore the docs »</strong></a> -->
     <br />
-    <a href="https://github.com/jbaczuk/react-tutorials"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/jbaczuk/react-tutorials">View Demo</a>
-    ·
+<!--     <a href="https://github.com/jbaczuk/react-tutorials">View Demo</a> -->
+<!--     · -->
     <a href="https://github.com/jbaczuk/react-tutorials/issues">Report Bug</a>
     ·
     <a href="https://github.com/jbaczuk/react-tutorials/issues">Request Feature</a>
@@ -101,9 +99,7 @@ Here's a blank template to get started:
 
 ### Built With
 
-* []()
-* []()
-* []()
+* React
 
 
 
@@ -172,7 +168,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@jbaczuk](https://twitter.com/jbaczuk) - jordan.baczuk@gmail.com
+[@jbaczuk](https://twitter.com/jbaczuk) - jordan.baczuk@gmail.com
 
 Project Link: [https://github.com/jbaczuk/react-tutorials](https://github.com/jbaczuk/react-tutorials)
 
