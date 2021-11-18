@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import './App.css'
-import ReactDnd from './DragAndDrop/DragAndDrop'
-import UsePrevious from './UsePrevious'
+import React, { useState } from "react";
+import "./App.css";
+import ReactDnd from "./DragAndDrop/DragAndDrop";
+import Memo from "./Memo";
+import UsePrevious from "./UsePrevious";
 
 function App() {
   const [selection, setSelection] = useState('')
@@ -36,9 +37,19 @@ function App() {
         >
           use-previous
         </li>
+        <li
+          style={{
+            cursor: "pointer",
+            color: selection === "use-memo" ? "red" : "blue",
+          }}
+          onClick={() => setSelection("use-memo")}
+        >
+          use-memo
+        </li>
       </ul>
-      {selection === 'react-dnd' && <ReactDnd />}
-      {selection === 'use-previous' && <UsePrevious />}
+      {selection === "react-dnd" && <ReactDnd />}
+      {selection === "use-previous" && <UsePrevious />}
+      {selection === "use-memo" && <Memo />}
     </div>
   )
 }
