@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react'
 
 function usePrevious(value: number) {
-  const ref = useRef<number | null>(null);
+  const ref = useRef<number | null>(null)
   useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
+    ref.current = value
+  })
+  return ref.current
 }
 
 export default function Counter() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
 
-  const prev = usePrevious(count);
+  const prev = usePrevious(count)
 
   return (
     <div>
@@ -20,5 +20,5 @@ export default function Counter() {
       <button onClick={() => setCount(count + 1)}>Increment</button>
       <button onClick={() => setCount(count - 1)}>Decrement</button>
     </div>
-  );
+  )
 }

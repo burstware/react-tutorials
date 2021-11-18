@@ -1,10 +1,11 @@
 import React from 'react'
 
-const Context = React.createContext('light');
+const Context = React.createContext('light')
 
-
-export default function ContextConsumer () {
+export default function ContextConsumer() {
   return (
-    <div></div>
+    <Context.Provider value="dark">
+      <div></div>
+    </Context.Provider>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Memo() {
   const [prop, setProp] = useState('')
@@ -8,26 +8,41 @@ export default function Memo() {
 
   return (
     <>
-    <Child prop={prop} />
-    {child2}
+      <Child prop={prop} />
+      {child2}
     </>
   )
 }
 
 function Child({ prop }: { prop: string }) {
-  console.log('child 1 rendered')
+  const [renderCount, setRenderCount] = useState(0)
+  useEffect(() => {
+    setRenderCount(renderCount + 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prop])
+
   return (
     <div>
-      <div>{prop}</div>
+      <span>Child 1 render count {renderCount}</span>
+      <div>prop value: {prop}</div>
     </div>
   )
 }
 
 const Child2Bare = ({ setProp }: { setProp: (prop: string) => void }) => {
-  console.log('child 2 rendered')
-  
+  const [renderCount, setRenderCount] = useState(0)
+  useEffect(() => {
+    setRenderCount(renderCount + 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setProp])
+
   return (
-    <button onClick={() => setProp(Math.random().toString())}>Change Prop</button>
+    <>
+      <span>Child 2 render count {renderCount}</span>
+      <button onClick={() => setProp(Math.random().toString())}>
+        Change Prop
+      </button>
+    </>
   )
 }
 

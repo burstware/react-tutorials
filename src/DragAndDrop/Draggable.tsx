@@ -1,14 +1,14 @@
-import React, { ReactNode } from "react";
-import { useDrag } from "react-dnd";
+import React, { ReactNode } from 'react'
+import { useDrag } from 'react-dnd'
 
 const Draggable = ({ children }: { children: ReactNode }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "Draggable",
+    type: 'Draggable',
     collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+      isDragging: !!monitor.isDragging()
     }),
-    item: { id: children },
-  }));
+    item: { id: children }
+  }))
 
   return (
     <div
@@ -18,7 +18,7 @@ const Draggable = ({ children }: { children: ReactNode }) => {
     >
       <p>{children}</p>
     </div>
-  );
-};
+  )
+}
 
-export default Draggable;
+export default Draggable
