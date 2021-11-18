@@ -33,7 +33,7 @@
 <br />
 <p align="center">
   <a href="https://linkedin.com/in/jbaczuk">
-    <img src="https://media-exp1.licdn.com/dms/image/C4E03AQGsy7ElKZ5pvA/profile-displayphoto-shrink_800_800/0/1605204832607?e=1637193600&v=beta&t=9TTbbE2N__F9G36KCk3PTl1gIWGPTeT9HKsUD6wN_lE" alt="Logo"  height="80" style="border-radius: 40px;">
+    <img src="https://media-exp1.licdn.com/dms/image/C4E03AQEEtnBj8Wl3zA/profile-displayphoto-shrink_800_800/0/1634488369615?e=1642636800&v=beta&t=nT705_8ymV-cjVkqJTLSN6fVIHvz-hgQtNoa2Jh89Wk" alt="Logo"  height="80" style="border-radius: 40px;">
   </a>
   
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/640px-Plus_symbol.svg.png" alt="Logo"  height="80">
