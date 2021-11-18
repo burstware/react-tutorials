@@ -1,0 +1,27 @@
+{
+  "root": true,
+  "extends": [
+    "react-app",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "prettier/prettier": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "no-warning-comments": [
+      2,
+      {
+        "terms": ["FIXME"]
+      }
+    ]
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "env": {
+    "es6": true,
+    "browser": true
+  }
+}
