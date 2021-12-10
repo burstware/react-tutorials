@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import ReactDnd from './DragAndDrop/DragAndDrop'
 import Memo from './Memo'
+import Mounted from './useMounted'
 import UsePrevious from './UsePrevious'
 
 function App() {
@@ -46,10 +47,20 @@ function App() {
         >
           use-memo
         </li>
+        <li
+          style={{
+            cursor: 'pointer',
+            color: selection === 'use-mounted' ? 'red' : 'blue'
+          }}
+          onClick={() => setSelection('use-mounted')}
+        >
+          use-mounted
+        </li>
       </ul>
       {selection === 'react-dnd' && <ReactDnd />}
       {selection === 'use-previous' && <UsePrevious />}
       {selection === 'use-memo' && <Memo />}
+      {selection === 'use-mounted' && <Mounted />}
     </div>
   )
 }
