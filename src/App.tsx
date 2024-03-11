@@ -4,6 +4,8 @@ import ReactDnd from './DragAndDrop/DragAndDrop'
 import Memo from './Memo'
 import Mounted from './useMounted'
 import UsePrevious from './UsePrevious'
+// import SO from './SO'
+import InfiniteScroll from './InifiniteScroll'
 
 function App() {
   const [selection, setSelection] = useState('')
@@ -56,11 +58,23 @@ function App() {
         >
           use-mounted
         </li>
+        <li
+          style={{
+            cursor: 'pointer',
+            color: selection === 'infinite-scroll' ? 'red' : 'blue'
+          }}
+          onClick={() => setSelection('infinite-scroll')}
+        >
+          infinite-scroll
+        </li>
       </ul>
       {selection === 'react-dnd' && <ReactDnd />}
       {selection === 'use-previous' && <UsePrevious />}
       {selection === 'use-memo' && <Memo />}
       {selection === 'use-mounted' && <Mounted />}
+      {selection === 'infinite-scroll' && <InfiniteScroll />}
+
+      {/* <SO /> */}
     </div>
   )
 }
