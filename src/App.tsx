@@ -5,7 +5,7 @@ import Memo from './Memo'
 import Mounted from './useMounted'
 import UsePrevious from './UsePrevious'
 // import SO from './SO'
-import InfiniteScroll from './InifiniteScroll'
+import Consumer from './InifiniteScroll/Consumer'
 
 function App() {
   const [selection, setSelection] = useState('')
@@ -72,7 +72,7 @@ function App() {
       {selection === 'use-previous' && <UsePrevious />}
       {selection === 'use-memo' && <Memo />}
       {selection === 'use-mounted' && <Mounted />}
-      {selection === 'infinite-scroll' && <InfiniteScroll />}
+      {selection === 'infinite-scroll' && <Consumer />}
 
       {/* <SO /> */}
     </div>
