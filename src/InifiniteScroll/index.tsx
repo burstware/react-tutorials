@@ -1,7 +1,13 @@
-import React, { useCallback, useEffect, useReducer, useRef } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState
+} from 'react'
 import { useInfiniteScroll } from './utils'
 
-const MAX_ITEMS = 150
+const MAX_BUFFER_SIZE = 150
 
 interface Item {
   id: number
@@ -10,28 +16,92 @@ interface Item {
 }
 
 export default function InfiniteScroll() {
-  const firstItemRef = useRef<HTMLElement>()
-  // this useReducer maintains a buffer of items that will make sure it will not exceed MAX_ITEMS in length by popping out old items
+  const previousScroll = useRef<{
+    height?: number
+    yLocation?: number
+    state: 'render' | 'done'
+  }>({
+    height: undefined,
+    yLocation: undefined,
+    state: 'done'
+  })
+  const [loading, setLoading] = useState('')
+
+  function stopWatching() {
+    firstItem(null)
+    preFirstItem(null)
+    lastItem(null)
+    preLastItem(null)
+  }
+
+  const fetchItems = async (direction: 'up' | 'down' = 'down') => {
+    // TODO: prevent unecessary fetching (when it returns empty, don't keep attempting)
+    return new Promise<void>((resolve) => {
+      setLoading(direction)
+      stopWatching()
+      setTimeout(async () => {
+        const newItems = generatePage(direction)
+        dispatchItems({
+          type: direction === 'up' ? 'prepend' : 'append',
+          items: newItems
+        })
+        setLoading('')
+        resolve()
+      }, 500)
+    })
+  }
+
+  const {
+    scrollableContainerRef,
+    preFirstItem,
+    firstItem,
+    preLastItem,
+    lastItem
+  } = useInfiniteScroll({
+    onScrollToFirstItem: async () => {
+      firstItem(null)
+      fetchItems('up')
+    },
+    onScrollToLastItem: async () => {
+      console.log('onScrollToLastItem')
+      fetchItems('down')
+    }
+  })
+
+  // this useReducer maintains a buffer of items that will make sure it will not exceed MAX_BUFFER_SIZE in length by popping out old items
   // when new items are added
   const [items, dispatchItems] = useReducer(
     (
       items: Item[],
       action: {
-        type: 'append' | 'prepend'
-        items: Item[]
+        type: 'append' | 'prepend' | 'cleanup'
+        items?: Item[]
       }
     ) => {
       if (action.items && !Array.isArray(action.items))
         action.items = [action.items]
       switch (action.type) {
         case 'prepend': {
-          let newItems = [...action.items, ...items]
-          newItems = newItems.slice(0, MAX_ITEMS)
+          const newItems = [...(action?.items ?? []), ...items]
+          if (previousScroll.current && scrollableContainerRef.current) {
+            previousScroll.current.height =
+              scrollableContainerRef.current.scrollHeight ?? 0
+            previousScroll.current.yLocation =
+              scrollableContainerRef.current.scrollTop
+          }
+          previousScroll.current.state = 'render'
           return newItems
         }
         case 'append': {
-          let newItems = [...items, ...action.items]
-          newItems = newItems.slice(Math.max(newItems.length - MAX_ITEMS, 0))
+          let newItems = [...items, ...(action?.items ?? [])]
+          newItems = newItems.slice(
+            Math.max(newItems.length - MAX_BUFFER_SIZE, 0)
+          )
+          return newItems
+        }
+        case 'cleanup': {
+          // clean up after prepending
+          const newItems = items.slice(0, MAX_BUFFER_SIZE)
           return newItems
         }
         default:
@@ -65,64 +135,62 @@ export default function InfiniteScroll() {
     [items]
   )
 
-  const { scrollableContainerRef, lastItem, firstItem } = useInfiniteScroll({
-    onScrollToFirstItem: async () => {
-      console.log('fetching newer items')
-      // generate 20 random items
-      const newItems = generatePage('up')
-      console.log('newItems', newItems)
-      dispatchItems({
-        type: 'prepend',
-        items: newItems
-      })
-    },
-    onScrollToLastItem: async () => {
-      console.log('fetching older items')
-      // generate 20 random items
-      const newItems = generatePage()
-      console.log('newItems', newItems)
-      dispatchItems({
-        type: 'append',
-        items: newItems
-      })
-    }
-  })
+  console.log('previousScroll.current', previousScroll.current)
 
+  // scroll to last item if scrolling up
   useEffect(() => {
-    const newItems = generatePage()
-    dispatchItems({
-      type: 'append',
-      items: newItems
-    })
+    if (previousScroll.current.state !== 'done') {
+      if (
+        scrollableContainerRef.current &&
+        previousScroll.current.height !== undefined && // these are undefined if scrolling down
+        previousScroll.current.yLocation !== undefined // these are undefined if scrolling down
+      ) {
+        const addedHeight =
+          scrollableContainerRef.current.scrollHeight -
+          previousScroll.current.height
+
+        let newLocation = addedHeight + previousScroll.current?.yLocation
+
+        console.log('newLocation', newLocation)
+
+        scrollableContainerRef.current.scroll({
+          top: newLocation
+        })
+      }
+
+      dispatchItems({
+        type: 'cleanup'
+      })
+      previousScroll.current.state = 'done'
+    }
+  }, [items, scrollableContainerRef])
+
+  // fetch initial items
+  useEffect(() => {
+    fetchItems('down')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    console.log('firstItemRef.current', firstItemRef.current)
-  }, [items])
-
-  const setFirstItemRefs = useCallback(
-    (node) => {
-      // Ref's from useRef needs to have the node assigned to `current`
-      firstItemRef.current = node
-      // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
-      firstItem(node)
-    },
-    [firstItem]
-  )
 
   return (
     <div
       ref={scrollableContainerRef}
       style={{
-        height: '300px',
-        overflow: 'auto'
+        height: '500px',
+        overflow: 'auto',
+        background: '#dddddd'
       }}
     >
+      {loading === 'up' && (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <p>Loading...</p>
+        </div>
+      )}
       {items.map((item, i) => {
         let ref = null
+        // if (i === items.length - 26) ref = preLastItem
         if (i === items.length - 1) ref = lastItem
-        if (i === 0 && items.length >= MAX_ITEMS) ref = setFirstItemRefs
+        // if (i === 24) ref = preFirstItem
+        if (i === 0) ref = firstItem
         return (
           <div key={item.id} ref={ref}>
             <div>{item.name}</div>
@@ -130,6 +198,11 @@ export default function InfiniteScroll() {
           </div>
         )
       })}
+      {loading === 'down' && (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <p>Loading...</p>
+        </div>
+      )}
     </div>
   )
 }
